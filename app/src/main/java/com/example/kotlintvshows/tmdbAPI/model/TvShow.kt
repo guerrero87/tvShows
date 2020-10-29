@@ -1,13 +1,13 @@
 package com.example.kotlintvshows.tmdbAPI.model
 
 class TvShow(
-    val poster_path: String,
+    val poster_path: String?,
     val id: Int,
-    val backdrop_path: String,
+    val backdrop_path: String?,
     val vote_average: Double,
     val overview: String,
     val first_air_date: String,
-    val genre_ids: List<Genre>,
+    val genre_ids: Array<Int>,
     val name: String)
 
 /*

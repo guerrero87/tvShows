@@ -1,7 +1,7 @@
 package com.example.kotlintvshows.tmdbAPI.model
 
 class TopTvShows(
-    val results: List<TvShow>,
+    val results: ArrayList<TvShow>,
     val total_results: Int,
     val total_pages: Int)
 
