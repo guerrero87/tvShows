@@ -21,7 +21,7 @@ object TmdbManager {
             .create(TmdbInterface::class.java)
     }
 
-    fun getTopTvShows(): Call<TopTvShows> {
-        return getClient().getTopTvShows(API_KEY, "us", 1)
+    fun getTopTvShows(language: String, page: Int): Call<TopTvShows> {
+        return getClient().getTopTvShows(API_KEY, language, page)
     }
 }
