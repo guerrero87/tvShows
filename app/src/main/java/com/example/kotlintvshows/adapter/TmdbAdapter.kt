@@ -32,7 +32,8 @@ class TmdbAdapter (private val tvShowsList: ArrayList<TvShow>, private val onTvS
             Picasso
                 .get()
                 .load("https://image.tmdb.org/t/p/w500/${tvShow.poster_path}")
-                .resize(500, 750)
+                .fit()
+                .centerCrop()
                 .into(itemView.imgPoster)
 
             itemView.tvName.text = tvShow.name
