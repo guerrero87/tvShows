@@ -1,5 +1,7 @@
 package com.example.kotlintvshows.tmdbAPI.model
 
+import java.io.Serializable
+
 class TvShow(
     val poster_path: String?,
     val id: Int,
@@ -8,7 +10,7 @@ class TvShow(
     val overview: String,
     val first_air_date: String,
     val genre_ids: Array<Int>,
-    val name: String)
+    val name: String): Serializable
 
 /*
     "poster_path": "/tfdiVvJkYMbUOXDWibPjzu5dY6S.jpg",
