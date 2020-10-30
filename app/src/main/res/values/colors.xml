@@ -6,5 +6,6 @@
 
 
     <color name="colorTextLight">#ffffff</color>
+    <color name="colorTextDark">#000000</color>
     <color name="colorBackgroundCard">#40000000</color>
 </resources>
