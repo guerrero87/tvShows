@@ -11,22 +11,22 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_tvshow.view.*
 
 class TmdbAdapter (private val tvShowsList: ArrayList<TvShow>, private val onTvShowClicked: OnTvShowClicked):
-    RecyclerView.Adapter<TmdbAdapter.ViewHolder>() {
+    RecyclerView.Adapter<TmdbAdapter.TvShowViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvShowViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_tvshow, parent, false)
-        return ViewHolder(view)
+        return TvShowViewHolder(view)
     }
 
     override fun getItemCount(): Int {
         return tvShowsList.size
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TvShowViewHolder, position: Int) {
         holder.bind(tvShowsList[position], position, onTvShowClicked)
     }
 
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    class TvShowViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
         fun bind(tvShow: TvShow, position: Int, onTvShowClicked: OnTvShowClicked){
             Picasso
