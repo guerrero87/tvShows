@@ -5,16 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintvshows.R
-import com.example.kotlintvshows.interfaces.OnTvShowClicked
+import com.example.kotlintvshows.interfaces.MainActivityBehaviour
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
-import com.google.gson.Gson
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_tvshow.view.*
 import kotlinx.android.synthetic.main.item_tvshow.view.*
-import kotlinx.android.synthetic.main.item_tvshow.view.imgPoster
-import kotlinx.android.synthetic.main.item_tvshow.view.tvName
 
-class TmdbAdapter (private val tvShowsList: ArrayList<TvShow>, private val onTvShowClicked: OnTvShowClicked):
+class TmdbAdapter (private val tvShowsList: ArrayList<TvShow>, private val mainActivityBehaviour: MainActivityBehaviour):
     RecyclerView.Adapter<TmdbAdapter.TvShowViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvShowViewHolder {
@@ -27,12 +23,12 @@ class TmdbAdapter (private val tvShowsList: ArrayList<TvShow>, private val onTvS
     }
 
     override fun onBindViewHolder(holder: TvShowViewHolder, position: Int) {
-        holder.bind(tvShowsList[position], onTvShowClicked)
+        holder.bind(tvShowsList[position], mainActivityBehaviour)
     }
 
     class TvShowViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
-        fun bind(tvShow: TvShow, onTvShowClicked: OnTvShowClicked){
+        fun bind(tvShow: TvShow, mainActivityBehaviour: MainActivityBehaviour){
             Picasso
                 .get()
                 .load("https://image.tmdb.org/t/p/w500/${tvShow.poster_path}")
@@ -43,7 +39,7 @@ class TmdbAdapter (private val tvShowsList: ArrayList<TvShow>, private val onTvS
             itemView.tvName.text = tvShow.name
 
             itemView.setOnClickListener{
-                onTvShowClicked.tvShowIntent(tvShow)
+                mainActivityBehaviour.onTvShowClicked(tvShow)
             }
         }
     }
