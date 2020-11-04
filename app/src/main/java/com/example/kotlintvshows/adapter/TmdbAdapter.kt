@@ -46,7 +46,6 @@ class TmdbAdapter (private val tvShowsList: ArrayList<TvShow>, private val mainA
                 true
             }
         }
-
     }
 }
 
