@@ -2,7 +2,6 @@ package com.example.kotlintvshows.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,7 +19,6 @@ import com.example.kotlintvshows.utils.writeUserDataFile
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.item_tvshow.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
