@@ -39,9 +39,14 @@ class TmdbAdapter (private val tvShowsList: ArrayList<TvShow>, private val mainA
             itemView.tvName.text = tvShow.name
 
             itemView.setOnClickListener{
-                mainActivityBehaviour.onTvShowClicked(tvShow)
+                mainActivityBehaviour.onTvShowPressed(tvShow)
+            }
+            itemView.setOnLongClickListener {
+                mainActivityBehaviour.onTvShowLongPressed()
+                true
             }
         }
+
     }
 }
 

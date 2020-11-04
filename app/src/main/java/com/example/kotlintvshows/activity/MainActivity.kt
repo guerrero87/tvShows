@@ -148,10 +148,14 @@ class MainActivity() : AppCompatActivity(), MainActivityBehaviour {
         favTvShowsAdapter.notifyDataSetChanged()
     }
 
-    override fun onTvShowClicked(tvShow: TvShow) {
+    override fun onTvShowPressed(tvShow: TvShow) {
         val intent = Intent(this, TvShowActivity::class.java)
         intent.putExtra("TVSHOW", tvShow)
         finish()
         startActivity(intent)
+    }
+
+    override fun onTvShowLongPressed() {
+        Toast.makeText(this, "LONG PRESSED", Toast.LENGTH_SHORT).show()
     }
 }
