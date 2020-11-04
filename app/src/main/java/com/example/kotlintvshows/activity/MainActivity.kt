@@ -1,6 +1,5 @@
 package com.example.kotlintvshows.activity
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -14,6 +13,9 @@ import com.example.kotlintvshows.interfaces.MainActivityBehaviour
 import com.example.kotlintvshows.tmdbAPI.manager.TmdbManager
 import com.example.kotlintvshows.tmdbAPI.model.TopTvShows
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
+import com.example.kotlintvshows.utils.Constants
+import com.example.kotlintvshows.utils.readUserDataFile
+import com.example.kotlintvshows.utils.writeUserDataFile
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_main.*
@@ -24,14 +26,17 @@ import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MainActivity : AppCompatActivity(), MainActivityBehaviour {
+class MainActivity() : AppCompatActivity(), MainActivityBehaviour {
 
     private var page = 1
 
-    private lateinit var favTvShowsIdList: MutableList<Int>
+    private var favTvShowsIdList: MutableList<Int> = ArrayList()
+    private var topTvShowsList: ArrayList<TvShow> = ArrayList()
+    private var favTvShowsList: ArrayList<TvShow> = ArrayList()
 
-    private val topTvShowsList: ArrayList<TvShow> = ArrayList()
-    private val favTvShowsList: ArrayList<TvShow> = ArrayList()
+    private lateinit var favTvShowsAdapter: TmdbAdapter
+
+    private val deviceLocale: String = Locale.getDefault().language
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,28 +48,15 @@ class MainActivity : AppCompatActivity(), MainActivityBehaviour {
     }
 
     private fun createUserDataFile() {
-        val fileName = "favTvShows.json"
+        val filePath = File(this.filesDir.toString() + "/" + Constants.fileName)
 
-        val file = File(this.filesDir.toString() + "/" + fileName)
-
-        if (!file.exists()) {
-            //file does not exist, create it
-            favTvShowsIdList = ArrayList()
-
-            val jsonString = Gson().toJson(favTvShowsIdList)
-
-            this.openFileOutput(fileName, Context.MODE_PRIVATE).use { output ->
-                output.write(jsonString.toByteArray())
-            }
+        if (!filePath.exists()) {
+            //FILE DOES NOT EXIST, CREATE IT
+            writeUserDataFile(this, Gson().toJson(favTvShowsIdList))
         } else {
-            //file exists, show content in toast
-            this.openFileInput(fileName).use { stream ->
-                val jsonStringToRead = stream.bufferedReader().use {
-                    it.readText()
-                }
-                favTvShowsIdList = Gson().fromJson(jsonStringToRead,
-                    object : TypeToken<MutableList<Int>>(){}.type)
-            }
+            //FILE EXISTS, READ CONTENT
+            favTvShowsIdList = Gson().fromJson(readUserDataFile(this),
+                object : TypeToken<MutableList<Int>>(){}.type)
         }
     }
 
@@ -73,7 +65,7 @@ class MainActivity : AppCompatActivity(), MainActivityBehaviour {
             this,
             RecyclerView.HORIZONTAL,
             false)
-        val favTvShowsAdapter = TmdbAdapter(favTvShowsList, this)
+        favTvShowsAdapter = TmdbAdapter(favTvShowsList, this)
 
         recyclerFavShows.layoutManager = linearLayoutManager
         recyclerFavShows.adapter = favTvShowsAdapter
@@ -83,15 +75,16 @@ class MainActivity : AppCompatActivity(), MainActivityBehaviour {
         }
     }
 
-
     private fun initTopTvShowsRecyclerView() {
-        val gridLayoutManager = GridLayoutManager(this, 3)
+        val gridLayoutManager = GridLayoutManager(
+            this,
+            Constants.gridLayoutColumnNumber)
         val topTvShowsAdapter = TmdbAdapter(topTvShowsList, this)
 
         recyclerTvShows.layoutManager = gridLayoutManager
         recyclerTvShows.adapter = topTvShowsAdapter
 
-        loadTopTvShows(Locale.getDefault().language, page, topTvShowsAdapter)
+        loadTopTvShows(deviceLocale, page, topTvShowsAdapter)
 
         recyclerTvShows.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -111,7 +104,7 @@ class MainActivity : AppCompatActivity(), MainActivityBehaviour {
 
             if ((visibleItemCount + pastVisibleItem) > total) {
                 page++
-                loadTopTvShows(Locale.getDefault().language, page, adapter)
+                loadTopTvShows(deviceLocale, page, adapter)
             }
         }
     }
@@ -127,7 +120,6 @@ class MainActivity : AppCompatActivity(), MainActivityBehaviour {
             override fun onResponse(call: Call<TvShow>, response: Response<TvShow>) {
                 handleTvShowResponse(response.body()!!, favTvShowsAdapter)
             }
-
         })
     }
 
@@ -159,6 +151,7 @@ class MainActivity : AppCompatActivity(), MainActivityBehaviour {
     override fun onTvShowClicked(tvShow: TvShow) {
         val intent = Intent(this, TvShowActivity::class.java)
         intent.putExtra("TVSHOW", tvShow)
+        finish()
         startActivity(intent)
     }
 }

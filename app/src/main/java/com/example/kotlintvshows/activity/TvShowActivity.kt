@@ -1,11 +1,14 @@
 package com.example.kotlintvshows.activity
 
-import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlintvshows.R
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
+import com.example.kotlintvshows.utils.Constants
+import com.example.kotlintvshows.utils.readUserDataFile
+import com.example.kotlintvshows.utils.writeUserDataFile
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.squareup.picasso.Picasso
@@ -25,20 +28,21 @@ class TvShowActivity : AppCompatActivity() {
         initUI(tvShow)
     }
 
-    private fun getUserDataFile() {
-        val fileName = "favTvShows.json"
+    override fun onBackPressed() {
+        val intent = Intent(this, MainActivity::class.java)
+        finish()
+        startActivity(intent)
+    }
 
-        val file = File(this.filesDir.toString() + "/" + fileName)
+    private fun getUserDataFile() {
+
+        val file = File(this.filesDir.toString() + "/" + Constants.fileName)
 
         if (file.exists()) {
             //file exists, show content in toast
-            this.openFileInput(fileName).use { stream ->
-                val jsonStringToRead = stream.bufferedReader().use {
-                    it.readText()
-                }
-                favTvShowsIdList = Gson().fromJson(jsonStringToRead,
-                    object : TypeToken<MutableList<Int>>(){}.type)
-            }
+            favTvShowsIdList = Gson().fromJson(readUserDataFile(this),
+                object : TypeToken<MutableList<Int>>(){}.type)
+
         } else {
             favTvShowsIdList = ArrayList()
             Toast.makeText(this, "ERROR: FILE NOT FOUND", Toast.LENGTH_SHORT).show()
@@ -46,9 +50,8 @@ class TvShowActivity : AppCompatActivity() {
             }
         }
 
-
     private fun initUI(tvShow: TvShow) {
-        var showAdded = false
+        var showAdded: Boolean
 
         Picasso
             .get()
@@ -60,14 +63,10 @@ class TvShowActivity : AppCompatActivity() {
         tvOverview.text = tvShow.overview
 
         if (favTvShowsIdList.contains(tvShow.id)){
-            btnSubscribe.setBackgroundResource(R.drawable.btn_subscribe_clicked)
-            btnSubscribe.setTextColor(resources.getColor(R.color.colorTextDark))
-            btnSubscribe.text = "ADDED"
+            setSubscribeBtnClicked()
             showAdded = true
         } else {
-            btnSubscribe.setBackgroundResource(R.drawable.btn_subscribe)
-            btnSubscribe.setTextColor(resources.getColor(R.color.colorTextLight))
-            btnSubscribe.text = "SUBSCRIBE"
+            setSubscribeBtnUnClicked()
             showAdded = false
         }
 
@@ -75,50 +74,44 @@ class TvShowActivity : AppCompatActivity() {
 
             if (!showAdded) {
                 btnSubscribe.isEnabled = false
-                btnSubscribe.setBackgroundResource(R.drawable.btn_subscribe_clicked)
-                btnSubscribe.setTextColor(resources.getColor(R.color.colorTextDark))
+                setSubscribeBtnClicked()
                 addTvShowToFavourites(tvShow.id)
-                btnSubscribe.text = "ADDED"
                 showAdded = true
             } else {
                 btnSubscribe.isEnabled = false
-                btnSubscribe.setBackgroundResource(R.drawable.btn_subscribe)
-                btnSubscribe.setTextColor(resources.getColor(R.color.colorTextLight))
+                setSubscribeBtnUnClicked()
                 removeTvShowToFavourites(tvShow.id)
-                btnSubscribe.text = "SUBSCRIBE"
                 showAdded = false
             }
         }
     }
 
+    private fun setSubscribeBtnUnClicked() {
+        btnSubscribe.setBackgroundResource(R.drawable.btn_subscribe)
+        btnSubscribe.setTextColor(resources.getColor(R.color.colorTextLight))
+        btnSubscribe.text = Constants.suscribe
+    }
+
+    private fun setSubscribeBtnClicked() {
+        btnSubscribe.setBackgroundResource(R.drawable.btn_subscribe_clicked)
+        btnSubscribe.setTextColor(resources.getColor(R.color.colorTextDark))
+        btnSubscribe.text = Constants.added
+    }
+
     private fun addTvShowToFavourites(tvShowId: Int) {
 
-        val fileName = "favTvShows.json"
+        val filePath = File(this.filesDir.toString() + "/" + Constants.fileName)
 
-        val file = File(this.filesDir.toString() + "/" + fileName)
-
-        if (file.exists()) {
+        if (filePath.exists()) {
             //OPEN THE FILE AND EXTRACT CONTENT TO STRING
-            this.openFileInput(fileName).use { stream ->
-                val jsonStringToRead = stream.bufferedReader().use {
-                    it.readText()
-                }
+            favTvShowsIdList = Gson().fromJson(readUserDataFile(this),
+                object : TypeToken<MutableList<Int>>(){}.type)
 
-                //CONVERT STRING TO OBJECT
-                val favTvShowsIdList = Gson().fromJson<MutableList<Int>>(jsonStringToRead,
-                    object : TypeToken<MutableList<Int>>(){}.type)
+            //ADD SELECTED TVSHOW ID TO LIST
+            favTvShowsIdList.add(tvShowId)
 
-                //ADD SELECTED TVSHOW ID TO LIST
-                favTvShowsIdList.add(tvShowId)
-
-                //CONVERT LIST BACK TO JSON STRING
-                val jsonStringToWrite = Gson().toJson(favTvShowsIdList)
-
-                //WRITE THE UPDATED LIST TO THE FILE
-                this.openFileOutput(fileName, Context.MODE_PRIVATE).use { output ->
-                    output.write(jsonStringToWrite.toByteArray())
-                }
-            }
+            //WRITE THE UPDATED LIST TO THE FILE
+            writeUserDataFile(this, Gson().toJson(favTvShowsIdList))
         }
         btnSubscribe.isEnabled = true
         Toast.makeText(this, "SHOW ADDED TO FAVOURITES", Toast.LENGTH_SHORT).show()
@@ -126,32 +119,18 @@ class TvShowActivity : AppCompatActivity() {
 
     private fun removeTvShowToFavourites(tvShowId: Int) {
 
-        val fileName = "favTvShows.json"
+        val filePath = File(this.filesDir.toString() + "/" + Constants.fileName)
 
-        val file = File(this.filesDir.toString() + "/" + fileName)
-
-        if (file.exists()) {
+        if (filePath.exists()) {
             //OPEN THE FILE AND EXTRACT CONTENT TO STRING
-            this.openFileInput(fileName).use { stream ->
-                val jsonStringToRead = stream.bufferedReader().use {
-                    it.readText()
-                }
+            favTvShowsIdList = Gson().fromJson(readUserDataFile(this),
+                object : TypeToken<MutableList<Int>>(){}.type)
 
-                //CONVERT STRING TO OBJECT
-                val favTvShowsIdList = Gson().fromJson<MutableList<Int>>(jsonStringToRead,
-                    object : TypeToken<MutableList<Int>>(){}.type)
+            //REMOVE SELECTED TVSHOW ID TO LIST
+            favTvShowsIdList.remove(tvShowId)
 
-                //ADD SELECTED TVSHOW ID TO LIST
-                favTvShowsIdList.remove(tvShowId)
-
-                //CONVERT LIST BACK TO JSON STRING
-                val jsonStringToWrite = Gson().toJson(favTvShowsIdList)
-
-                //WRITE THE UPDATED LIST TO THE FILE
-                this.openFileOutput(fileName, Context.MODE_PRIVATE).use { output ->
-                    output.write(jsonStringToWrite.toByteArray())
-                }
-            }
+            //WRITE THE UPDATED LIST TO THE FILE
+            writeUserDataFile(this, Gson().toJson(favTvShowsIdList))
         }
         btnSubscribe.isEnabled = true
         Toast.makeText(this, "SHOW REMOVED FROM FAVOURITES", Toast.LENGTH_SHORT).show()
