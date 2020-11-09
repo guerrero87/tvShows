@@ -7,31 +7,20 @@
     tools:context=".activity.MainActivity">
 
     <TextView
-        android:id="@+id/tvFavShows"
+        android:id="@+id/tvTopTvShows"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="MY FAVOURITE SHOWS"/>
+        android:text="TOP TV SHOWS"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerFavShows"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvFavShows"
-        />
-
-    <TextView
-        android:id="@+id/tvTopTvSHows"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/recyclerFavShows"
+        app:layout_constraintTop_toBottomOf="@id/tvTopTvShows"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"
-        android:text="CLICK ME"/>
+        android:id="@+id/recyclerTvShows"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,7 +36,7 @@ class TvShowActivity : AppCompatActivity() {
 
     private fun getUserDataFile() {
 
-        val file = File(this.filesDir.toString() + "/" + Constants.fileName)
+        val file = File(this.filesDir.toString() + "/" + Constants.FILE_NAME)
 
         if (file.exists()) {
             //file exists, show content in toast
@@ -89,18 +89,18 @@ class TvShowActivity : AppCompatActivity() {
     private fun setSubscribeBtnUnClicked() {
         btnSubscribe.setBackgroundResource(R.drawable.btn_subscribe)
         btnSubscribe.setTextColor(resources.getColor(R.color.colorTextLight))
-        btnSubscribe.text = Constants.suscribe
+        btnSubscribe.text = Constants.SUBSCRIBE
     }
 
     private fun setSubscribeBtnClicked() {
         btnSubscribe.setBackgroundResource(R.drawable.btn_subscribe_clicked)
         btnSubscribe.setTextColor(resources.getColor(R.color.colorTextDark))
-        btnSubscribe.text = Constants.added
+        btnSubscribe.text = Constants.ADDED
     }
 
     private fun addTvShowToFavourites(tvShowId: Int) {
 
-        val filePath = File(this.filesDir.toString() + "/" + Constants.fileName)
+        val filePath = File(this.filesDir.toString() + "/" + Constants.FILE_NAME)
 
         if (filePath.exists()) {
             //OPEN THE FILE AND EXTRACT CONTENT TO STRING
@@ -119,7 +119,7 @@ class TvShowActivity : AppCompatActivity() {
 
     private fun removeTvShowToFavourites(tvShowId: Int) {
 
-        val filePath = File(this.filesDir.toString() + "/" + Constants.fileName)
+        val filePath = File(this.filesDir.toString() + "/" + Constants.FILE_NAME)
 
         if (filePath.exists()) {
             //OPEN THE FILE AND EXTRACT CONTENT TO STRING
