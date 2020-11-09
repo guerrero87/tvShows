@@ -43,6 +43,7 @@ class TmdbAdapter (private val tvShowsList: ArrayList<TvShow>, private val mainA
             }
             itemView.setOnLongClickListener {
                 itemView.imgFavTvShow.visibility = View.VISIBLE
+                mainActivityBehaviour.onTvShowLongPressed()
                 true
             }
             itemView.imgFavTvShow.setOnClickListener {

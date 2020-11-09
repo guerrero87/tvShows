@@ -13,9 +13,7 @@ import com.example.kotlintvshows.interfaces.MainActivityBehaviour
 import com.example.kotlintvshows.tmdbAPI.manager.TmdbManager
 import com.example.kotlintvshows.tmdbAPI.model.TopTvShows
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
-import com.example.kotlintvshows.utils.Constants
-import com.example.kotlintvshows.utils.readUserDataFile
-import com.example.kotlintvshows.utils.writeUserDataFile
+import com.example.kotlintvshows.utils.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_main.*
@@ -26,14 +24,14 @@ import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MainActivity() : AppCompatActivity(), MainActivityBehaviour {
+class MainActivity : AppCompatActivity(), MainActivityBehaviour {
 
     private var page = 1
 
     private var favTvShowsIdList: MutableList<Int> = ArrayList()
-    private var topTvShowsList: ArrayList<TvShow> = ArrayList()
-    private var favTvShowsList: ArrayList<TvShow> = ArrayList()
 
+    private var favTvShowsList: ArrayList<TvShow> = ArrayList()
+    private var topTvShowsList: ArrayList<TvShow> = ArrayList()
     private lateinit var favTvShowsAdapter: TmdbAdapter
 
     private val deviceLocale: String = Locale.getDefault().language
@@ -79,6 +77,7 @@ class MainActivity() : AppCompatActivity(), MainActivityBehaviour {
         val gridLayoutManager = GridLayoutManager(
             this,
             Constants.gridLayoutColumnNumber)
+
         val topTvShowsAdapter = TmdbAdapter(topTvShowsList, this)
 
         recyclerTvShows.layoutManager = gridLayoutManager
@@ -89,24 +88,14 @@ class MainActivity() : AppCompatActivity(), MainActivityBehaviour {
         recyclerTvShows.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
 
-                detectRecyclerScrollPosition(dy, gridLayoutManager, topTvShowsAdapter)
+               if (detectRecyclerScrollPosition(dy, gridLayoutManager, topTvShowsAdapter)) {
+                   page++
+                   loadTopTvShows(deviceLocale, page, topTvShowsAdapter)
+               }
 
                 super.onScrolled(recyclerView, dx, dy)
             }
         })
-    }
-
-    private fun detectRecyclerScrollPosition(dy: Int, gridLayoutManager: GridLayoutManager, adapter: TmdbAdapter) {
-        if (dy > 0) {
-            val visibleItemCount: Int = gridLayoutManager.childCount
-            val pastVisibleItem: Int = gridLayoutManager.findFirstCompletelyVisibleItemPosition()
-            val total: Int = adapter.itemCount
-
-            if ((visibleItemCount + pastVisibleItem) > total) {
-                page++
-                loadTopTvShows(deviceLocale, page, adapter)
-            }
-        }
     }
 
     private fun loadFavTvShows(deviceLocale: String, tvShowId: Int, favTvShowsAdapter: TmdbAdapter) {
@@ -123,29 +112,28 @@ class MainActivity() : AppCompatActivity(), MainActivityBehaviour {
         })
     }
 
-    private fun loadTopTvShows(deviceLocale: String, page: Int, topTvShowsAdapter: TmdbAdapter) {
-
+    fun loadTopTvShows(deviceLocale: String, page: Int, topTvShowsAdapter: TmdbAdapter) {
         val call: Call<TopTvShows> = TmdbManager.getTopTvShows(deviceLocale, page)
 
         call.enqueue(object: Callback<TopTvShows> {
-            override fun onFailure(call: Call<TopTvShows>, t: Throwable) {
+            override fun onFailure(call: Call<TopTvShows>, t: Throwable){
                 Toast.makeText(applicationContext, "ERROR: ${t.message}", Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<TopTvShows>, response: Response<TopTvShows>) {
-                handleTopTvShowsResponse(response.body()!!, topTvShowsAdapter)
+                handleTopTvShowResponse(response.body()!!, topTvShowsAdapter)
             }
         })
-    }
-
-    private fun handleTopTvShowsResponse(topTvShows: TopTvShows, topTvShowsAdapter: TmdbAdapter) {
-        topTvShowsList.addAll(topTvShows.results)
-        topTvShowsAdapter.notifyDataSetChanged()
     }
 
     private fun handleTvShowResponse(tvShow: TvShow, favTvShowsAdapter: TmdbAdapter) {
         favTvShowsList.add(tvShow)
         favTvShowsAdapter.notifyDataSetChanged()
+    }
+
+    private fun handleTopTvShowResponse(topTvShow: TopTvShows, topTvShowsAdapter: TmdbAdapter) {
+        topTvShowsList.addAll(topTvShow.results)
+        topTvShowsAdapter.notifyDataSetChanged()
     }
 
     override fun onTvShowPressed(tvShow: TvShow) {
