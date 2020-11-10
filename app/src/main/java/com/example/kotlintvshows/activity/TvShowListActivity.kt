@@ -24,7 +24,9 @@ class TvShowListActivity: BaseActivity<TvShowsListPresenter>(), TvShowsContract.
 
     private val deviceLocale: String = java.util.Locale.getDefault().language
     private var page = 1
-    private lateinit var requestType: String
+    private var requestType: String = ""
+    private var TvShowsList: MutableList<TvShow> = ArrayList()
+    private lateinit var topTvShowsAdapter: TmdbAdapter
 
     override fun createPresenter(context: Context): TvShowsListPresenter {
         return TvShowsListPresenter(this, TmdbManager)
@@ -33,17 +35,23 @@ class TvShowListActivity: BaseActivity<TvShowsListPresenter>(), TvShowsContract.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tvshows_list)
+        requestType = intent.getStringExtra(Constants.REQUEST_TYPE)
         fetchTvShowDetails()
     }
 
     override fun fetchTvShowDetails() {
-        presenter.fetchTvShowsData(deviceLocale, page, TOP_TV_SHOWS)//requestType from get value from bundle
+        presenter.fetchTvShowsData(deviceLocale, page, requestType)
     }
 
     override fun showResponseDetails(tvshows: TopTvShows) {
-        tvTopTvShows.text = TOP_TV_SHOWS
+        tvTvShows.text = requestType
+        TvShowsList.addAll(tvshows.results)
+        initTopTvShowsRecyclerView(TvShowsList as ArrayList<TvShow>)
+    }
 
-        initTopTvShowsRecyclerView(tvshows.results)
+    override fun loadNextResultsPage(tvshows: TopTvShows) {
+        TvShowsList.addAll(tvshows.results)
+        topTvShowsAdapter.notifyDataSetChanged()
     }
 
     override fun showError() {
@@ -55,7 +63,7 @@ class TvShowListActivity: BaseActivity<TvShowsListPresenter>(), TvShowsContract.
             this,
             Constants.GRID_LAYOUT_COLUMN_NUMBER)
 
-        val topTvShowsAdapter = TmdbAdapter(topTvShowsList, object: MainActivityBehaviour {
+        topTvShowsAdapter = TmdbAdapter(topTvShowsList, object: MainActivityBehaviour {
             override fun onTvShowPressed(tvShow: TvShow) {
                 val intent = Intent(applicationContext, TvShowActivity::class.java)
                 intent.putExtra("TVSHOW", tvShow)
@@ -76,7 +84,7 @@ class TvShowListActivity: BaseActivity<TvShowsListPresenter>(), TvShowsContract.
 
                 if (detectRecyclerScrollPosition(dy, gridLayoutManager, topTvShowsAdapter)) {
                     page++
-                    presenter.fetchTvShowsData(deviceLocale, page, TOP_TV_SHOWS)//requestType from get value from bundle
+                    presenter.fetchNextPageTvShowsData(deviceLocale, page, requestType)
                 }
                 super.onScrolled(recyclerView, dx, dy)
             }

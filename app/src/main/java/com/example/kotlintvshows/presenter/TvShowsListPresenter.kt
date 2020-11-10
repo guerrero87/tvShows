@@ -28,4 +28,17 @@ class TvShowsListPresenter constructor(view: TvShowsContract.View, tmdbManager: 
         }
         , language, page, requestType)
     }
+
+    override fun fetchNextPageTvShowsData(language: String, page: Int, requestType: String) {
+        tmdbManager?.getTvShowsData(object: TmdbManager.OnDataFetched {
+            override fun onSuccess(topTvShowsData: TopTvShows) {
+                view?.loadNextResultsPage(topTvShowsData)
+            }
+
+            override fun onFailure() {
+                view?.showError()
+            }
+        }
+            , language, page, requestType)
+    }
 }

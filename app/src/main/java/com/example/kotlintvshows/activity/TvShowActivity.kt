@@ -89,13 +89,13 @@ class TvShowActivity : AppCompatActivity() {
     private fun setSubscribeBtnUnClicked() {
         btnSubscribe.setBackgroundResource(R.drawable.btn_subscribe)
         btnSubscribe.setTextColor(resources.getColor(R.color.colorTextLight))
-        btnSubscribe.text = Constants.SUBSCRIBE
+        btnSubscribe.text = resources.getString(R.string.subscribe)
     }
 
     private fun setSubscribeBtnClicked() {
         btnSubscribe.setBackgroundResource(R.drawable.btn_subscribe_clicked)
         btnSubscribe.setTextColor(resources.getColor(R.color.colorTextDark))
-        btnSubscribe.text = Constants.ADDED
+        btnSubscribe.text = resources.getString(R.string.added)
     }
 
     private fun addTvShowToFavourites(tvShowId: Int) {

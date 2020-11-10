@@ -10,12 +10,11 @@ class Constants {
         const val TMDB_API_KEY = BuildConfig.TMDB_API_KEY
         const val FILE_NAME = "favTvShows1.json"
         const val TMDB_URL = "https://api.themoviedb.org/3/"
-        const val SUBSCRIBE = "SUBSCRIBE"
-        const val ADDED = "ADDED"
         const val TAG = "MY_TAG"
+        const val REQUEST_TYPE = "REQUEST_TYPE"
         const val GRID_LAYOUT_COLUMN_NUMBER = 3
 
         //REQUEST TYPES
-        const val TOP_TV_SHOWS = "TopTvShows"
+        const val TOP_TV_SHOWS = "Top TvShows"
     }
 }

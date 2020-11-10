@@ -2,7 +2,6 @@ package com.example.kotlintvshows.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,49 +11,29 @@ import com.example.kotlintvshows.adapter.TmdbAdapter
 import com.example.kotlintvshows.interfaces.MainActivityBehaviour
 import com.example.kotlintvshows.tmdbAPI.manager.TmdbManager
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
-import com.example.kotlintvshows.utils.Constants
-import com.example.kotlintvshows.utils.readUserDataFile
-import com.example.kotlintvshows.utils.writeUserDataFile
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.example.kotlintvshows.utils.createOrOpenUserDataFile
+import com.example.kotlintvshows.utils.launchTvShowsListActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), MainActivityBehaviour {
 
-    private var favTvShowsIdList: MutableList<Int> = ArrayList()
-
     private var favTvShowsList: ArrayList<TvShow> = ArrayList()
+
     private lateinit var favTvShowsAdapter: TmdbAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        createUserDataFile()
         initFavShowsRecyclerView()
         tvTopTvSHows.setOnClickListener {
-            val intent = Intent(this, TvShowListActivity::class.java)
             finish()
-            startActivity(intent)
-        }
-    }
-
-    private fun createUserDataFile() {
-        val filePath = File(this.filesDir.toString() + "/" + Constants.FILE_NAME)
-
-        if (!filePath.exists()) {
-            //FILE DOES NOT EXIST, CREATE IT
-            writeUserDataFile(this, Gson().toJson(favTvShowsIdList))
-        } else {
-            //FILE EXISTS, READ CONTENT
-            favTvShowsIdList = Gson().fromJson(readUserDataFile(this),
-                object : TypeToken<MutableList<Int>>(){}.type)
+            launchTvShowsListActivity(this, tvTopTvSHows.text as String)
         }
     }
 
@@ -67,6 +46,8 @@ class MainActivity : AppCompatActivity(), MainActivityBehaviour {
 
         recyclerFavShows.layoutManager = linearLayoutManager
         recyclerFavShows.adapter = favTvShowsAdapter
+
+        val favTvShowsIdList: MutableList<Int> = createOrOpenUserDataFile(this)
 
         for (tvShowId in favTvShowsIdList) {
             loadFavTvShows(Locale.getDefault().language, tvShowId, favTvShowsAdapter)
