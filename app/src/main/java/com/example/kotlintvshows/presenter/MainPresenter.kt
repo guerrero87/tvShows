@@ -1,5 +1,7 @@
 package com.example.kotlintvshows.presenter
 
+import android.content.Context
+import com.example.kotlintvshows.R
 import com.example.kotlintvshows.base.BasePresenter
 import com.example.kotlintvshows.interfaces.MainContract
 import com.example.kotlintvshows.tmdbAPI.manager.TmdbManager
@@ -16,25 +18,15 @@ class MainPresenter constructor(view: MainContract.View, tmdbManager: TmdbManage
         this.tmdbManager = tmdbManager
     }
 
-    override fun fetchSingleTvShowData(tvShowId: Int, deviceLanguage: String) {
+    override fun fetchSingleTvShowData(context: Context, tvShowId: Int, deviceLanguage: String) {
         tmdbManager?.getTvShow(object: TmdbManager.OnSingleTvShowDataFetched {
             override fun onSuccess(tvShow: TvShow) {
                 view?.showSingleTvShowResponseDetails(tvShow)
             }
 
             override fun onFailure() {
-                view?.showError()
+                view?.showToast(context.getString(R.string.error_no_internet))
             }
-
         },tvShowId, deviceLanguage)
-    }
-
-    //TODO: DEBO PONER ESTE TIPO DE METODOS EN EL PRESENTER?
-    override fun onTvShowPressed(tvShow: TvShow) {
-        view?.onTvShowPressed(tvShow)
-    }
-
-    override fun onTvShowLongPressed() {
-        view?.onTvShowLongPressed()
     }
 }

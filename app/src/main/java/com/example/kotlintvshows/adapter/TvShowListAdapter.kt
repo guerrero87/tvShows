@@ -1,16 +1,22 @@
 package com.example.kotlintvshows.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintvshows.R
-import com.example.kotlintvshows.presenter.TvShowListPresenter
+import com.example.kotlintvshows.interfaces.TvShowListContract
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
+import com.example.kotlintvshows.utils.addTvShowToFavourites
+import com.example.kotlintvshows.utils.openUserDataFile
+import com.example.kotlintvshows.utils.removeTvShowToFavourites
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_tvshow.view.*
 
-class TvShowListAdapter (private val tvShowsList: ArrayList<TvShow>, private val tvShowListPresenter: TvShowListPresenter):
+class TvShowListAdapter (private val context: Context,
+                         private val tvShowsList: ArrayList<TvShow>,
+                         private val tvShowListContract: TvShowListContract.View):
     RecyclerView.Adapter<TvShowListAdapter.TvShowViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvShowViewHolder {
@@ -23,12 +29,12 @@ class TvShowListAdapter (private val tvShowsList: ArrayList<TvShow>, private val
     }
 
     override fun onBindViewHolder(holder: TvShowViewHolder, position: Int) {
-        holder.bind(tvShowsList[position], tvShowListPresenter)
+        holder.bind(context, tvShowsList[position], tvShowListContract)
     }
 
     class TvShowViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
-        fun bind(tvShow: TvShow, tvShowListPresenter: TvShowListPresenter){
+        fun bind(context: Context, tvShow: TvShow, tvShowListContract: TvShowListContract.View){
             Picasso
                 .get()
                 .load("https://image.tmdb.org/t/p/w500/${tvShow.poster_path}")
@@ -36,20 +42,33 @@ class TvShowListAdapter (private val tvShowsList: ArrayList<TvShow>, private val
                 .centerCrop()
                 .into(itemView.imgPoster)
 
+            //TODO: THIS ITERATION MIGHT REDUCE PERFORMANCE
+            if (openUserDataFile(context).contains(tvShow.id)) {
+                itemView.imgFavTvShow.visibility = View.VISIBLE
+            }
+
             itemView.tvName.text = tvShow.name
 
             itemView.setOnClickListener{
-                tvShowListPresenter.onTvShowPressed(tvShow)
+                tvShowListContract.onTvShowPressed(tvShow)
             }
+
             itemView.setOnLongClickListener {
-                itemView.imgFavTvShow.visibility = View.VISIBLE
-                tvShowListPresenter.onTvShowLongPressed()
-                true
+                if (itemView.imgFavTvShow.visibility == View.VISIBLE) {
+                    tvShowListContract.showToast(context.getString(R.string.show_already_fav))
+                    true
+                } else {
+                    itemView.imgFavTvShow.visibility = View.VISIBLE
+                    addTvShowToFavourites(context, tvShow.id)
+                    tvShowListContract.showToast(context.getString(R.string.show_added))
+                    true
+                }
             }
             itemView.imgFavTvShow.setOnClickListener {
                 itemView.imgFavTvShow.visibility = View.GONE
+                removeTvShowToFavourites(context, tvShow.id)
+                tvShowListContract.showToast(context.getString(R.string.show_removed))
             }
         }
     }
 }
-

@@ -4,34 +4,22 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlintvshows.R
+import com.example.kotlintvshows.interfaces.TvShowContract
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
+import com.example.kotlintvshows.utils.*
 import com.example.kotlintvshows.utils.Constants.Companion.LIST_ACTIVITY
 import com.example.kotlintvshows.utils.Constants.Companion.MAIN_ACTIVITY
 import com.example.kotlintvshows.utils.Constants.Companion.REQUEST_TYPE
-import com.example.kotlintvshows.utils.launchMainActivity
-import com.example.kotlintvshows.utils.launchTvShowsListActivity
-import com.example.kotlintvshows.utils.openUserDataFile
-import com.example.kotlintvshows.utils.writeUserDataFile
-import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_tvshow.*
 
-class TvShowActivity : AppCompatActivity() {
-
-    private lateinit var favTvShowsIdList: MutableList<Int>
+class TvShowActivity : AppCompatActivity(), TvShowContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tvshow)
 
         val tvShow: TvShow = intent.getSerializableExtra("TVSHOW") as TvShow
-
-        favTvShowsIdList = openUserDataFile(this)
-
-        if (favTvShowsIdList.isEmpty()) {
-            btnSubscribe.isEnabled = false
-        }
-
         initUI(tvShow)
     }
 
@@ -58,7 +46,7 @@ class TvShowActivity : AppCompatActivity() {
         tvName.text = tvShow.name
         tvOverview.text = tvShow.overview
 
-        showAdded = if (favTvShowsIdList.contains(tvShow.id)){
+        showAdded = if (openUserDataFile(this).contains(tvShow.id)){
             setSubscribeBtnClicked()
             true
         } else {
@@ -67,52 +55,41 @@ class TvShowActivity : AppCompatActivity() {
         }
 
         btnSubscribe.setOnClickListener {
-
-            if (!showAdded) {
-                btnSubscribe.isEnabled = false
+            showAdded = if (!showAdded) {
+                isSubscribeBtnEnabled(false)
                 setSubscribeBtnClicked()
-                addTvShowToFavourites(tvShow.id)
-                showAdded = true
+                addTvShowToFavourites(this, tvShow.id)
+                isSubscribeBtnEnabled(true)
+                showToast(resources.getString(R.string.show_added))
+                true
             } else {
-                btnSubscribe.isEnabled = false
+                isSubscribeBtnEnabled(false)
                 setSubscribeBtnUnClicked()
-                removeTvShowToFavourites(tvShow.id)
-                showAdded = false
+                removeTvShowToFavourites(this, tvShow.id)
+                isSubscribeBtnEnabled(true)
+                showToast(resources.getString(R.string.show_removed))
+                false
             }
         }
     }
 
-    private fun setSubscribeBtnUnClicked() {
+    override fun setSubscribeBtnUnClicked() {
         btnSubscribe.setBackgroundResource(R.drawable.btn_subscribe)
         btnSubscribe.setTextColor(resources.getColor(R.color.colorTextLight))
         btnSubscribe.text = resources.getString(R.string.subscribe)
     }
 
-    private fun setSubscribeBtnClicked() {
+    override fun setSubscribeBtnClicked() {
         btnSubscribe.setBackgroundResource(R.drawable.btn_subscribe_clicked)
         btnSubscribe.setTextColor(resources.getColor(R.color.colorTextDark))
         btnSubscribe.text = resources.getString(R.string.added)
     }
 
-    private fun addTvShowToFavourites(tvShowId: Int) {
-        //ADD SELECTED TVSHOW ID TO LIST
-        favTvShowsIdList.add(tvShowId)
-
-        //WRITE THE UPDATED LIST TO THE FILE
-        writeUserDataFile(this, Gson().toJson(favTvShowsIdList))
-
-        btnSubscribe.isEnabled = true
-        Toast.makeText(this, "SHOW ADDED TO FAVOURITES", Toast.LENGTH_SHORT).show()
+    override fun isSubscribeBtnEnabled(boolean: Boolean) {
+        btnSubscribe.isEnabled = boolean
     }
 
-    private fun removeTvShowToFavourites(tvShowId: Int) {
-        //REMOVE SELECTED TVSHOW ID TO LIST
-        favTvShowsIdList.remove(tvShowId)
-
-        //WRITE THE UPDATED LIST TO THE FILE
-        writeUserDataFile(this, Gson().toJson(favTvShowsIdList))
-
-        btnSubscribe.isEnabled = true
-        Toast.makeText(this, "SHOW REMOVED FROM FAVOURITES", Toast.LENGTH_SHORT).show()
+    override fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

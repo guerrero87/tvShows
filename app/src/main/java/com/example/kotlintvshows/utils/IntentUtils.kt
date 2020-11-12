@@ -11,12 +11,6 @@ import com.example.kotlintvshows.utils.Constants.Companion.LIST_ACTIVITY
 import com.example.kotlintvshows.utils.Constants.Companion.MAIN_ACTIVITY
 import com.example.kotlintvshows.utils.Constants.Companion.REQUEST_TYPE
 
-fun launchTvShowsListActivity(context: Context, requestType: String?) {
-    val intent = Intent(context, TvShowListActivity::class.java)
-    intent.putExtra(REQUEST_TYPE, requestType)
-    startActivity(context, intent, null)
-}
-
 fun launchTvShowActivityMain(context: Context, tvShow: TvShow) {
     launchTvShowActivity(context, tvShow, MAIN_ACTIVITY, null)
 }
@@ -29,6 +23,12 @@ private fun launchTvShowActivity(context: Context, tvShow: TvShow, origin: Strin
     val intent = Intent(context, TvShowActivity::class.java)
     intent.putExtra("TVSHOW", tvShow)
     intent.putExtra("ORIGIN", origin)
+    intent.putExtra(REQUEST_TYPE, requestType)
+    startActivity(context, intent, null)
+}
+
+fun launchTvShowsListActivity(context: Context, requestType: String?) {
+    val intent = Intent(context, TvShowListActivity::class.java)
     intent.putExtra(REQUEST_TYPE, requestType)
     startActivity(context, intent, null)
 }

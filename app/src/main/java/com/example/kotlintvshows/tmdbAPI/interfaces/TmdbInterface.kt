@@ -1,7 +1,7 @@
 package com.example.kotlintvshows.tmdbAPI.interfaces
 
-import com.example.kotlintvshows.tmdbAPI.model.TvShowsList
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
+import com.example.kotlintvshows.tmdbAPI.model.TvShowsList
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

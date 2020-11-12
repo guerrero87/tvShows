@@ -1,9 +1,10 @@
 package com.example.kotlintvshows.presenter
 
+import android.content.Context
+import com.example.kotlintvshows.R
 import com.example.kotlintvshows.base.BasePresenter
 import com.example.kotlintvshows.interfaces.TvShowListContract
 import com.example.kotlintvshows.tmdbAPI.manager.TmdbManager
-import com.example.kotlintvshows.tmdbAPI.model.TvShow
 import com.example.kotlintvshows.tmdbAPI.model.TvShowsList
 
 class TvShowListPresenter constructor(view: TvShowListContract.View, tmdbManager: TmdbManager):
@@ -17,38 +18,35 @@ class TvShowListPresenter constructor(view: TvShowListContract.View, tmdbManager
         this.tmdbManager = tmdbManager
     }
 
-    override fun fetchTvShowsData(language: String, page: Int, requestType: String) {
+    override fun fetchTvShowsData(context: Context,
+                                  language: String,
+                                  page: Int,
+                                  requestType: String) {
         tmdbManager?.getTvShowsListData(object: TmdbManager.OnTvShowListDataFetched {
             override fun onSuccess(tvShowsListData: TvShowsList) {
                 view?.showTvSHowListResponseDetails(tvShowsListData)
             }
 
             override fun onFailure() {
-                view?.showError()
+                view?.showToast(context.getString(R.string.error_no_internet))
             }
         }
         , language, page, requestType)
     }
 
-    override fun fetchNextPageTvShowsData(language: String, page: Int, requestType: String) {
+    override fun fetchNextPageTvShowsData(context: Context,
+                                          language: String,
+                                          page: Int,
+                                          requestType: String) {
         tmdbManager?.getTvShowsListData(object: TmdbManager.OnTvShowListDataFetched {
             override fun onSuccess(tvShowsListData: TvShowsList) {
                 view?.loadNextResultsPage(tvShowsListData)
             }
 
             override fun onFailure() {
-                view?.showError()
+                view?.showToast(context.getString(R.string.error_no_internet))
             }
         }
             , language, page, requestType)
-    }
-
-    //TODO: DEBO PONER ESTE TIPO DE METODOS EN EL PRESENTER?
-    override fun onTvShowPressed(tvShow: TvShow) {
-        view?.onTvShowPressed(tvShow)
-    }
-
-    override fun onTvShowLongPressed() {
-        view?.onTvShowLongPressed()
     }
 }

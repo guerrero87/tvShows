@@ -20,7 +20,6 @@ fun writeUserDataFile(context: Context, jsonStringToWrite: String) {
     }
 }
 
-
 fun createOrOpenUserDataFile(context: Context): MutableList<Int> {
     val filePath = File(context.filesDir.toString() + "/" + Constants.FILE_NAME)
 

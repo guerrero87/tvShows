@@ -1,7 +1,7 @@
 package com.example.kotlintvshows.interfaces
 
+import android.content.Context
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
-import com.example.kotlintvshows.tmdbAPI.model.TvShowsList
 
 interface MainContract {
 
@@ -9,14 +9,11 @@ interface MainContract {
         fun fetchSingleTvShowDetails()
         fun showSingleTvShowResponseDetails(tvShow: TvShow)
         fun onTvShowPressed(tvShow: TvShow)
-        fun onTvShowLongPressed()
-        fun showError()
+        fun refreshRecycler(tvShow: TvShow)
+        fun showToast(message: String)
     }
 
     interface Presenter {
-        fun fetchSingleTvShowData(tvShowId: Int, deviceLanguage: String)
-        //TODO: NO TENGO UNA DUPLICACION DE METODOS DE ESTA MANERA??
-        fun onTvShowPressed(tvShow: TvShow)
-        fun onTvShowLongPressed()
+        fun fetchSingleTvShowData(context: Context, tvShowId: Int, deviceLanguage: String)
     }
 }

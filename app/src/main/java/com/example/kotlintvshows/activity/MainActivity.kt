@@ -53,7 +53,7 @@ class MainActivity : BaseActivity<MainPresenter>(), MainContract.View {
             this,
             RecyclerView.HORIZONTAL,
             false)
-        favTvShowsAdapter = MainAdapter(favTvShowsList, presenter)
+        favTvShowsAdapter = MainAdapter(this, favTvShowsList, this)
 
         recyclerFavShows.layoutManager = linearLayoutManager
         recyclerFavShows.adapter = favTvShowsAdapter
@@ -63,7 +63,7 @@ class MainActivity : BaseActivity<MainPresenter>(), MainContract.View {
     override fun fetchSingleTvShowDetails() {
         val favTvShowsIdList: MutableList<Int> = createOrOpenUserDataFile(this)
         for (tvShowId in favTvShowsIdList) {
-            presenter.fetchSingleTvShowData(tvShowId, deviceLocale)
+            presenter.fetchSingleTvShowData(this, tvShowId, deviceLocale)
         }
     }
 
@@ -77,11 +77,12 @@ class MainActivity : BaseActivity<MainPresenter>(), MainContract.View {
         launchTvShowActivityMain(applicationContext, tvShow)
     }
 
-    override fun onTvShowLongPressed() {
-        Toast.makeText(this, "LONG PRESSED", Toast.LENGTH_SHORT).show()
+    override fun refreshRecycler(tvShow: TvShow) {
+        favTvShowsList.remove(tvShow)
+        favTvShowsAdapter.notifyDataSetChanged()
     }
 
-    override fun showError() {
-        Toast.makeText(this, "ERROR: CHECK INTERNET CONNECTION", Toast.LENGTH_SHORT).show()
+    override fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

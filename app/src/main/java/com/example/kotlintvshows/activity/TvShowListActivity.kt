@@ -11,8 +11,8 @@ import com.example.kotlintvshows.base.BaseActivity
 import com.example.kotlintvshows.interfaces.TvShowListContract
 import com.example.kotlintvshows.presenter.TvShowListPresenter
 import com.example.kotlintvshows.tmdbAPI.manager.TmdbManager
-import com.example.kotlintvshows.tmdbAPI.model.TvShowsList
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
+import com.example.kotlintvshows.tmdbAPI.model.TvShowsList
 import com.example.kotlintvshows.utils.Constants
 import com.example.kotlintvshows.utils.detectRecyclerScrollPosition
 import com.example.kotlintvshows.utils.launchMainActivity
@@ -25,7 +25,7 @@ class TvShowListActivity: BaseActivity<TvShowListPresenter>(), TvShowListContrac
     private var page = 1
     private var requestType: String = ""
     private var tvShowsList: MutableList<TvShow> = ArrayList()
-    private lateinit var topTvShowsAdapter: TvShowListAdapter
+    private lateinit var tvShowListAdapter: TvShowListAdapter
 
     override fun createPresenter(context: Context): TvShowListPresenter {
         return TvShowListPresenter(this, TmdbManager)
@@ -43,19 +43,41 @@ class TvShowListActivity: BaseActivity<TvShowListPresenter>(), TvShowListContrac
         launchMainActivity(this)
     }
 
+    private fun initTvShowListRecyclerView(tvShowList: ArrayList<TvShow>) {
+        val gridLayoutManager = GridLayoutManager(
+            this,
+            Constants.GRID_LAYOUT_COLUMN_NUMBER)
+
+        tvShowListAdapter = TvShowListAdapter(this, tvShowList, this)
+
+        recyclerTvShows.layoutManager = gridLayoutManager
+        recyclerTvShows.adapter = tvShowListAdapter
+
+        recyclerTvShows.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+
+                if (detectRecyclerScrollPosition(dy, gridLayoutManager, tvShowListAdapter)) {
+                    page++
+                    presenter.fetchNextPageTvShowsData(applicationContext, deviceLocale, page, requestType)
+                }
+                super.onScrolled(recyclerView, dx, dy)
+            }
+        })
+    }
+
     override fun fetchTvShowListDetails() {
-        presenter.fetchTvShowsData(deviceLocale, page, requestType)
+        presenter.fetchTvShowsData(this, deviceLocale, page, requestType)
     }
 
     override fun showTvSHowListResponseDetails(tvshows: TvShowsList) {
         tvTvShows.text = requestType
         tvShowsList.addAll(tvshows.results)
-        initTopTvShowsRecyclerView(tvShowsList as ArrayList<TvShow>)
+        initTvShowListRecyclerView(tvShowsList as ArrayList<TvShow>)
     }
 
     override fun loadNextResultsPage(tvshows: TvShowsList) {
         tvShowsList.addAll(tvshows.results)
-        topTvShowsAdapter.notifyDataSetChanged()
+        tvShowListAdapter.notifyDataSetChanged()
     }
 
     override fun onTvShowPressed(tvShow: TvShow) {
@@ -63,33 +85,7 @@ class TvShowListActivity: BaseActivity<TvShowListPresenter>(), TvShowListContrac
         launchTvShowActivityList(applicationContext, tvShow, requestType)
     }
 
-    override fun onTvShowLongPressed() {
-        Toast.makeText(applicationContext, "LONG PRESSED", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun showError() {
-        Toast.makeText(applicationContext, "ERROR", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun initTopTvShowsRecyclerView(topTvShowsList: ArrayList<TvShow>) {
-        val gridLayoutManager = GridLayoutManager(
-            this,
-            Constants.GRID_LAYOUT_COLUMN_NUMBER)
-
-        topTvShowsAdapter = TvShowListAdapter(topTvShowsList, presenter)
-
-        recyclerTvShows.layoutManager = gridLayoutManager
-        recyclerTvShows.adapter = topTvShowsAdapter
-
-        recyclerTvShows.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-
-                if (detectRecyclerScrollPosition(dy, gridLayoutManager, topTvShowsAdapter)) {
-                    page++
-                    presenter.fetchNextPageTvShowsData(deviceLocale, page, requestType)
-                }
-                super.onScrolled(recyclerView, dx, dy)
-            }
-        })
+    override fun showToast(message: String) {
+        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 }

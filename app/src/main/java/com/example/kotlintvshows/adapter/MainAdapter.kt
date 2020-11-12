@@ -1,16 +1,22 @@
 package com.example.kotlintvshows.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintvshows.R
-import com.example.kotlintvshows.presenter.MainPresenter
+import com.example.kotlintvshows.interfaces.MainContract
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
+import com.example.kotlintvshows.utils.addTvShowToFavourites
+import com.example.kotlintvshows.utils.openUserDataFile
+import com.example.kotlintvshows.utils.removeTvShowToFavourites
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_tvshow.view.*
 
-class MainAdapter (private val tvShowsList: ArrayList<TvShow>, private val mainPresenter: MainPresenter):
+class MainAdapter (private val context: Context,
+                   private val tvShowsList: ArrayList<TvShow>,
+                   private val mainContract: MainContract.View):
     RecyclerView.Adapter<MainAdapter.TvShowViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvShowViewHolder {
@@ -23,12 +29,12 @@ class MainAdapter (private val tvShowsList: ArrayList<TvShow>, private val mainP
     }
 
     override fun onBindViewHolder(holder: TvShowViewHolder, position: Int) {
-        holder.bind(tvShowsList[position], mainPresenter)
+        holder.bind(context, tvShowsList[position], mainContract)
     }
 
     class TvShowViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
-        fun bind(tvShow: TvShow, mainPresenter: MainPresenter){
+        fun bind(context: Context, tvShow: TvShow, mainContract: MainContract.View){
             Picasso
                 .get()
                 .load("https://image.tmdb.org/t/p/w500/${tvShow.poster_path}")
@@ -36,18 +42,33 @@ class MainAdapter (private val tvShowsList: ArrayList<TvShow>, private val mainP
                 .centerCrop()
                 .into(itemView.imgPoster)
 
+            //TODO: THIS ITERATION MIGHT REDUCE PERFORMANCE
+            if (openUserDataFile(context).contains(tvShow.id)) {
+                itemView.imgFavTvShow.visibility = View.VISIBLE
+            }
+
             itemView.tvName.text = tvShow.name
 
             itemView.setOnClickListener{
-                mainPresenter.onTvShowPressed(tvShow)
+                mainContract.onTvShowPressed(tvShow)
             }
+
             itemView.setOnLongClickListener {
-                itemView.imgFavTvShow.visibility = View.VISIBLE
-                mainPresenter.onTvShowLongPressed()
-                true
+                if (itemView.imgFavTvShow.visibility == View.VISIBLE) {
+                    mainContract.showToast(context.getString(R.string.show_already_fav))
+                    true
+                } else {
+                    itemView.imgFavTvShow.visibility = View.VISIBLE
+                    addTvShowToFavourites(context, tvShow.id)
+                    mainContract.showToast(context.getString(R.string.show_added))
+                    true
+                }
             }
             itemView.imgFavTvShow.setOnClickListener {
                 itemView.imgFavTvShow.visibility = View.GONE
+                removeTvShowToFavourites(context, tvShow.id)
+                mainContract.refreshRecycler(tvShow)
+                mainContract.showToast(context.getString(R.string.show_removed))
             }
         }
     }
