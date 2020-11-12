@@ -38,13 +38,13 @@ class MainActivity : BaseActivity<MainPresenter>(), MainContract.View {
     }
 
     private fun initListeners() {
-        tvPopularTvSHows.setOnClickListener {
+        btnPopularTvSHows.setOnClickListener {
             finish()
-            launchTvShowsListActivity(this, tvPopularTvSHows.text as String)
+            launchTvShowsListActivity(this, btnPopularTvSHows.text as String)
         }
-        tvTopTvSHows.setOnClickListener {
+        btnTopTvSHows.setOnClickListener {
             finish()
-            launchTvShowsListActivity(this, tvTopTvSHows.text as String)
+            launchTvShowsListActivity(this, btnTopTvSHows.text as String)
         }
     }
 
