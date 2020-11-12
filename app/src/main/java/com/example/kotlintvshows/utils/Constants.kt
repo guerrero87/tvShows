@@ -13,7 +13,9 @@ class Constants {
         const val TAG = "MY_TAG"
         const val REQUEST_TYPE = "REQUEST_TYPE"
         const val GRID_LAYOUT_COLUMN_NUMBER = 3
-
+        //INTENT ORIGIN TYPES
+        const val MAIN_ACTIVITY = "Main Activity"
+        const val LIST_ACTIVITY = "List Activity"
         //REQUEST TYPES
         const val TOP_TV_SHOWS = "Top TvShows"
     }

@@ -1,15 +1,15 @@
 package com.example.kotlintvshows.presenter
 
 import com.example.kotlintvshows.base.BasePresenter
-import com.example.kotlintvshows.interfaces.Contract
+import com.example.kotlintvshows.interfaces.TvShowListContract
 import com.example.kotlintvshows.tmdbAPI.manager.TmdbManager
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
 import com.example.kotlintvshows.tmdbAPI.model.TvShowsList
 
-class Presenter constructor(view: Contract.View, tmdbManager: TmdbManager):
-    BasePresenter(), Contract.Presenter {
+class TvShowListPresenter constructor(view: TvShowListContract.View, tmdbManager: TmdbManager):
+    BasePresenter(), TvShowListContract.Presenter {
 
-    var view: Contract.View? = null
+    var view: TvShowListContract.View? = null
     var tmdbManager: TmdbManager? = null
 
     init {
@@ -41,19 +41,6 @@ class Presenter constructor(view: Contract.View, tmdbManager: TmdbManager):
             }
         }
             , language, page, requestType)
-    }
-
-    override fun fetchSingleTvShowData(tvShowId: Int, deviceLanguage: String) {
-        tmdbManager?.getTvShow(object: TmdbManager.OnSingleTvShowDataFetched {
-            override fun onSuccess(tvShow: TvShow) {
-                view?.showSingleTvShowResponseDetails(tvShow)
-            }
-
-            override fun onFailure() {
-                view?.showError()
-            }
-
-        },tvShowId, deviceLanguage)
     }
 
     //TODO: DEBO PONER ESTE TIPO DE METODOS EN EL PRESENTER?

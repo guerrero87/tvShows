@@ -6,28 +6,27 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintvshows.R
-import com.example.kotlintvshows.adapter.TmdbAdapter
+import com.example.kotlintvshows.adapter.MainAdapter
 import com.example.kotlintvshows.base.BaseActivity
-import com.example.kotlintvshows.interfaces.Contract
-import com.example.kotlintvshows.presenter.Presenter
+import com.example.kotlintvshows.interfaces.MainContract
+import com.example.kotlintvshows.presenter.MainPresenter
 import com.example.kotlintvshows.tmdbAPI.manager.TmdbManager
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
-import com.example.kotlintvshows.tmdbAPI.model.TvShowsList
 import com.example.kotlintvshows.utils.createOrOpenUserDataFile
-import com.example.kotlintvshows.utils.launchTvShowActivity
+import com.example.kotlintvshows.utils.launchTvShowActivityMain
 import com.example.kotlintvshows.utils.launchTvShowsListActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MainActivity : BaseActivity<Presenter>(), Contract.View {
+class MainActivity : BaseActivity<MainPresenter>(), MainContract.View {
 
     private val deviceLocale: String = Locale.getDefault().language
     private var favTvShowsList: ArrayList<TvShow> = ArrayList()
-    private lateinit var favTvShowsAdapter: TmdbAdapter
+    private lateinit var favTvShowsAdapter: MainAdapter
 
-    override fun createPresenter(context: Context): Presenter {
-        return Presenter(this, TmdbManager)
+    override fun createPresenter(context: Context): MainPresenter {
+        return MainPresenter(this, TmdbManager)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,15 +49,11 @@ class MainActivity : BaseActivity<Presenter>(), Contract.View {
             this,
             RecyclerView.HORIZONTAL,
             false)
-        favTvShowsAdapter = TmdbAdapter(favTvShowsList, presenter)
+        favTvShowsAdapter = MainAdapter(favTvShowsList, presenter)
 
         recyclerFavShows.layoutManager = linearLayoutManager
         recyclerFavShows.adapter = favTvShowsAdapter
         favTvShowsAdapter.notifyDataSetChanged()
-    }
-
-    override fun fetchTvShowListDetails() {
-        TODO("DOES NOT APPLY HERE")
     }
 
     override fun fetchSingleTvShowDetails() {
@@ -73,17 +68,9 @@ class MainActivity : BaseActivity<Presenter>(), Contract.View {
         initFavShowsRecyclerView()
     }
 
-    override fun showTvSHowListResponseDetails(tvshows: TvShowsList) {
-        TODO("DOES NOT APPLY HERE")
-    }
-
-    override fun loadNextResultsPage(tvshows: TvShowsList) {
-        TODO("DOES NOT APPLY HERE")
-    }
-
     override fun onTvShowPressed(tvShow: TvShow) {
         finish()
-        launchTvShowActivity(applicationContext, tvShow)
+        launchTvShowActivityMain(applicationContext, tvShow)
     }
 
     override fun onTvShowLongPressed() {

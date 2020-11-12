@@ -1,6 +1,7 @@
 package com.example.kotlintvshows.utils
 
 import android.content.Context
+import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
@@ -27,6 +28,21 @@ fun createOrOpenUserDataFile(context: Context): MutableList<Int> {
         //FILE DOES NOT EXIST, CREATE IT
         val newEmptyList: MutableList<Int> = ArrayList()
         writeUserDataFile(context, Gson().toJson(newEmptyList))
+        newEmptyList
+    } else {
+        //FILE EXISTS, READ CONTENT
+        Gson().fromJson(readUserDataFile(context),
+            object : TypeToken<MutableList<Int>>(){}.type)
+    }
+}
+
+fun openUserDataFile(context: Context): MutableList<Int> {
+    val filePath = File(context.filesDir.toString() + "/" + Constants.FILE_NAME)
+
+    return if (!filePath.exists()) {
+        //FILE NOT FOUND. NOTIFY
+        val newEmptyList: MutableList<Int> = ArrayList()
+        Toast.makeText(context, "ERROR: FILE NOT FOUND", Toast.LENGTH_SHORT).show()
         newEmptyList
     } else {
         //FILE EXISTS, READ CONTENT
