@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.kotlintvshows.tmdbAPI.interfaces.TmdbInterface
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
 import com.example.kotlintvshows.tmdbAPI.model.TvShowsList
+import com.example.kotlintvshows.utils.Constants.Companion.POPULAR_TV_SHOWS
 import com.example.kotlintvshows.utils.Constants.Companion.TAG
 import com.example.kotlintvshows.utils.Constants.Companion.TMDB_API_KEY
 import com.example.kotlintvshows.utils.Constants.Companion.TMDB_URL
@@ -36,12 +37,13 @@ object TmdbManager {
             .create(TmdbInterface::class.java)
     }
 
-    fun getTvShowsData(listener: OnTvShowListDataFetched, language: String, page: Int, requestType: String) {
+    fun getTvShowsListData(listener: OnTvShowListDataFetched, language: String, page: Int, requestType: String) {
 
         val getData = when (requestType) {
+                    POPULAR_TV_SHOWS -> getClient().getPopularTvShows(TMDB_API_KEY, language, page)
                     TOP_TV_SHOWS -> getClient().getTopTvShows(TMDB_API_KEY, language, page)
                     //TODO: THINK DEFAULT CASE...
-                    else -> getClient().getTopTvShows(TMDB_API_KEY, language, page)
+                    else -> getClient().getPopularTvShows(TMDB_API_KEY, language, page)
         }
 
         getData.enqueue(object : Callback<TvShowsList>{

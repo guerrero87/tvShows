@@ -18,7 +18,7 @@ class TvShowListPresenter constructor(view: TvShowListContract.View, tmdbManager
     }
 
     override fun fetchTvShowsData(language: String, page: Int, requestType: String) {
-        tmdbManager?.getTvShowsData(object: TmdbManager.OnTvShowListDataFetched {
+        tmdbManager?.getTvShowsListData(object: TmdbManager.OnTvShowListDataFetched {
             override fun onSuccess(tvShowsListData: TvShowsList) {
                 view?.showTvSHowListResponseDetails(tvShowsListData)
             }
@@ -31,7 +31,7 @@ class TvShowListPresenter constructor(view: TvShowListContract.View, tmdbManager
     }
 
     override fun fetchNextPageTvShowsData(language: String, page: Int, requestType: String) {
-        tmdbManager?.getTvShowsData(object: TmdbManager.OnTvShowListDataFetched {
+        tmdbManager?.getTvShowsListData(object: TmdbManager.OnTvShowListDataFetched {
             override fun onSuccess(tvShowsListData: TvShowsList) {
                 view?.loadNextResultsPage(tvShowsListData)
             }

@@ -38,6 +38,10 @@ class MainActivity : BaseActivity<MainPresenter>(), MainContract.View {
     }
 
     private fun initListeners() {
+        tvPopularTvSHows.setOnClickListener {
+            finish()
+            launchTvShowsListActivity(this, tvPopularTvSHows.text as String)
+        }
         tvTopTvSHows.setOnClickListener {
             finish()
             launchTvShowsListActivity(this, tvTopTvSHows.text as String)
@@ -78,6 +82,6 @@ class MainActivity : BaseActivity<MainPresenter>(), MainContract.View {
     }
 
     override fun showError() {
-        Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "ERROR: CHECK INTERNET CONNECTION", Toast.LENGTH_SHORT).show()
     }
 }

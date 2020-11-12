@@ -17,6 +17,7 @@ class Constants {
         const val MAIN_ACTIVITY = "Main Activity"
         const val LIST_ACTIVITY = "List Activity"
         //REQUEST TYPES
+        const val POPULAR_TV_SHOWS = "Popular TvShows"
         const val TOP_TV_SHOWS = "Top TvShows"
     }
 }

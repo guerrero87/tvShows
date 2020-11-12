@@ -13,7 +13,7 @@ import com.example.kotlintvshows.utils.Constants.Companion.REQUEST_TYPE
 
 fun launchTvShowsListActivity(context: Context, requestType: String?) {
     val intent = Intent(context, TvShowListActivity::class.java)
-    intent.putExtra(Constants.REQUEST_TYPE, requestType)
+    intent.putExtra(REQUEST_TYPE, requestType)
     startActivity(context, intent, null)
 }
 

@@ -15,6 +15,7 @@ import com.example.kotlintvshows.tmdbAPI.model.TvShowsList
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
 import com.example.kotlintvshows.utils.Constants
 import com.example.kotlintvshows.utils.detectRecyclerScrollPosition
+import com.example.kotlintvshows.utils.launchMainActivity
 import com.example.kotlintvshows.utils.launchTvShowActivityList
 import kotlinx.android.synthetic.main.activity_tvshows_list.*
 
@@ -35,6 +36,11 @@ class TvShowListActivity: BaseActivity<TvShowListPresenter>(), TvShowListContrac
         setContentView(R.layout.activity_tvshows_list)
         requestType = intent.getStringExtra(Constants.REQUEST_TYPE)
         fetchTvShowListDetails()
+    }
+
+    override fun onBackPressed() {
+        finish()
+        launchMainActivity(this)
     }
 
     override fun fetchTvShowListDetails() {

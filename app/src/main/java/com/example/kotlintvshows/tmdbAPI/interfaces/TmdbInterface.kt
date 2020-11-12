@@ -10,9 +10,15 @@ import retrofit2.http.Query
 interface TmdbInterface {
 
     @GET("tv/popular")
+    fun getPopularTvShows(@Query("api_key") apiKey: String,
+                          @Query("language") language: String,
+                          @Query("page") page: Int)
+            : Call<TvShowsList>
+
+    @GET("tv/top_rated")
     fun getTopTvShows(@Query("api_key") apiKey: String,
-                      @Query("language") language: String,
-                      @Query("page") page: Int)
+                          @Query("language") language: String,
+                          @Query("page") page: Int)
             : Call<TvShowsList>
 
     @GET("tv/{id}")
