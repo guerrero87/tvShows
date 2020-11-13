@@ -9,7 +9,9 @@ import com.example.kotlintvshows.tmdbAPI.model.TvShow
 import com.example.kotlintvshows.utils.*
 import com.example.kotlintvshows.utils.Constants.Companion.LIST_ACTIVITY
 import com.example.kotlintvshows.utils.Constants.Companion.MAIN_ACTIVITY
+import com.example.kotlintvshows.utils.Constants.Companion.ORIGIN
 import com.example.kotlintvshows.utils.Constants.Companion.REQUEST_TYPE
+import com.example.kotlintvshows.utils.Constants.Companion.TV_SHOW
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_tvshow.*
 
@@ -19,12 +21,12 @@ class TvShowActivity : AppCompatActivity(), TvShowContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tvshow)
 
-        val tvShow: TvShow = intent.getSerializableExtra("TVSHOW") as TvShow
+        val tvShow: TvShow = intent.getSerializableExtra(TV_SHOW) as TvShow
         initUI(tvShow)
     }
 
     override fun onBackPressed() {
-        val origin = intent.getSerializableExtra("ORIGIN")
+        val origin = intent.getSerializableExtra(ORIGIN)
         val requestType = intent.getSerializableExtra(REQUEST_TYPE) as String?
         finish()
         when (origin) {

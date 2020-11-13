@@ -12,6 +12,7 @@ class TvShow(
     val genre_ids: Array<Int>,
     val name: String): Serializable
 
+//EXAMPLE RESPONSE
 /*
     "poster_path": "/tfdiVvJkYMbUOXDWibPjzu5dY6S.jpg",
     "popularity": 1.722162,

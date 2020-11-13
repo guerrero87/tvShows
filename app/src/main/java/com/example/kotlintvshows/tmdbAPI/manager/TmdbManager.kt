@@ -42,7 +42,7 @@ object TmdbManager {
         val getData = when (requestType) {
                     POPULAR_TV_SHOWS -> getClient().getPopularTvShows(TMDB_API_KEY, language, page)
                     TOP_TV_SHOWS -> getClient().getTopTvShows(TMDB_API_KEY, language, page)
-                    //TODO: THINK DEFAULT CASE...
+                    //TODO: WHAT SHOULD I DO FOR DEFAULT CASE?
                     else -> getClient().getPopularTvShows(TMDB_API_KEY, language, page)
         }
 

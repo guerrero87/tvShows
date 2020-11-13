@@ -14,6 +14,7 @@ import com.example.kotlintvshows.tmdbAPI.manager.TmdbManager
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
 import com.example.kotlintvshows.tmdbAPI.model.TvShowsList
 import com.example.kotlintvshows.utils.Constants
+import com.example.kotlintvshows.utils.Constants.Companion.REQUEST_TYPE
 import com.example.kotlintvshows.utils.detectRecyclerScrollPosition
 import com.example.kotlintvshows.utils.launchMainActivity
 import com.example.kotlintvshows.utils.launchTvShowActivityList
@@ -34,7 +35,7 @@ class TvShowListActivity: BaseActivity<TvShowListPresenter>(), TvShowListContrac
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tvshows_list)
-        requestType = intent.getStringExtra(Constants.REQUEST_TYPE)
+        requestType = intent.getStringExtra(REQUEST_TYPE)
         fetchTvShowListDetails()
     }
 

@@ -5,6 +5,7 @@ class TvShowsList(
     val total_results: Int,
     val total_pages: Int)
 
+//EXAMPLE RESPOSE
 /*
 "results": [
     {

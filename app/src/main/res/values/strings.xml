@@ -3,6 +3,7 @@
     <string name="loren_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris laoreet cursus sapien. Fusce ac erat id risus congue ultrices eget sit amet erat. Pellentesque dictum, est eget pellentesque aliquet, purus elit fringilla justo, id facilisis velit leo ac enim. Proin ac elit eget nunc posuere rutrum quis vitae elit. Aliquam erat volutpat. Morbi blandit blandit magna, quis hendrerit ligula bibendum a. Maecenas placerat in dolor at hendrerit. Cras vitae lectus faucibus, malesuada purus sed, volutpat nisi. Aenean vehicula ultricies massa, et iaculis magna pharetra vitae. Interdum et malesuada fames ac ante ipsum primis in faucibus.</string>
     <string name="Popular_tv_shows">Popular TvShows</string>
     <string name="top_tv_shows">Top TvShows</string>
+    <string name="fav_tv_shows">My TvShows</string>
     <string name="subscribe">SUBSCRIBE</string>
     <string name="added">ADDED</string>
     <!---MESSAGES-->
@@ -10,4 +11,5 @@
     <string name="show_already_fav">This show is already on your list!</string>
     <string name="show_added">Show added to fav!</string>
     <string name="show_removed">Show removed from fav!</string>
+    <string name="img_content_desc">TvShow Image</string>
 </resources>
