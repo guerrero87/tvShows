@@ -8,6 +8,7 @@
     <string name="added">ADDED</string>
     <!---MESSAGES-->
     <string name="error_no_internet">Error: Check your internet connection</string>
+    <string name="error_no_file">Error: File not found</string>
     <string name="show_already_fav">This show is already on your list!</string>
     <string name="show_added">Show added to fav!</string>
     <string name="show_removed">Show removed from fav!</string>

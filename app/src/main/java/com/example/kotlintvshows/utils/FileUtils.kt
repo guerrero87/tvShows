@@ -2,6 +2,7 @@ package com.example.kotlintvshows.utils
 
 import android.content.Context
 import android.widget.Toast
+import com.example.kotlintvshows.R
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
@@ -41,7 +42,7 @@ fun openUserDataFile(context: Context): MutableList<Int> {
     return if (!filePath.exists()) {
         //FILE NOT FOUND. NOTIFY
         val newEmptyList: MutableList<Int> = ArrayList()
-        Toast.makeText(context, "ERROR: FILE NOT FOUND", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context.getString(R.string.error_no_file), Toast.LENGTH_SHORT).show()
         newEmptyList
     } else {
         //FILE EXISTS, READ CONTENT
