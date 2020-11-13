@@ -15,7 +15,7 @@ class Constants {
         const val TAG = "MY_TAG"
         const val REQUEST_TYPE = "REQUEST_TYPE"
         const val ORIGIN = "ORIGIN"
-        const val TV_SHOW = "TV_SHOW"
+        const val TV_SHOW_ID = "TV_SHOW_ID"
         //INTENT ORIGIN TYPES
         const val MAIN_ACTIVITY = "Main Activity"
         const val LIST_ACTIVITY = "List Activity"

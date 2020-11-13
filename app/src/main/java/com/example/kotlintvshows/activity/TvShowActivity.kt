@@ -1,28 +1,35 @@
 package com.example.kotlintvshows.activity
 
+import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlintvshows.R
+import com.example.kotlintvshows.base.BaseActivity
 import com.example.kotlintvshows.interfaces.TvShowContract
+import com.example.kotlintvshows.presenter.TvShowPresenter
+import com.example.kotlintvshows.tmdbAPI.manager.TmdbManager
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
 import com.example.kotlintvshows.utils.*
 import com.example.kotlintvshows.utils.Constants.Companion.LIST_ACTIVITY
 import com.example.kotlintvshows.utils.Constants.Companion.MAIN_ACTIVITY
 import com.example.kotlintvshows.utils.Constants.Companion.ORIGIN
 import com.example.kotlintvshows.utils.Constants.Companion.REQUEST_TYPE
-import com.example.kotlintvshows.utils.Constants.Companion.TV_SHOW
+import com.example.kotlintvshows.utils.Constants.Companion.TV_SHOW_ID
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_tvshow.*
+import java.util.*
 
-class TvShowActivity : AppCompatActivity(), TvShowContract.View {
+class TvShowActivity : BaseActivity<TvShowPresenter>(), TvShowContract.View {
+
+    override fun createPresenter(context: Context): TvShowPresenter {
+        return TvShowPresenter(this, TmdbManager)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tvshow)
 
-        val tvShow: TvShow = intent.getSerializableExtra(TV_SHOW) as TvShow
-        initUI(tvShow)
+        fetchFavTvShowsDetails()
     }
 
     override fun onBackPressed() {
@@ -45,6 +52,7 @@ class TvShowActivity : AppCompatActivity(), TvShowContract.View {
             .fit()
             .centerCrop()
             .into(imgPoster)
+
         tvName.text = tvShow.name
         tvOverview.text = tvShow.overview
 
@@ -73,6 +81,23 @@ class TvShowActivity : AppCompatActivity(), TvShowContract.View {
                 false
             }
         }
+        if (tvShow.networks.isNotEmpty()) {
+            Picasso
+                .get()
+                .load("https://image.tmdb.org/t/p/w500${tvShow.networks[0].logo_path}")
+                .into(imgNetworks)
+        }
+    }
+
+    override fun fetchFavTvShowsDetails() {
+        val tvShowId: Int = intent.getSerializableExtra(TV_SHOW_ID) as Int
+        val deviceLocale: String = Locale.getDefault().language
+
+        presenter.fetchSingleTvShowData(this, tvShowId, deviceLocale)
+    }
+
+    override fun showSingleTvShowResponseDetails(tvShow: TvShow) {
+        initUI(tvShow)
     }
 
     override fun setSubscribeBtnUnClicked() {

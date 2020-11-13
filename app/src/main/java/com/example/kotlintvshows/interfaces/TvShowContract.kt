@@ -1,8 +1,13 @@
 package com.example.kotlintvshows.interfaces
 
+import android.content.Context
+import com.example.kotlintvshows.tmdbAPI.model.TvShow
+
 interface TvShowContract {
 
     interface View {
+        fun fetchFavTvShowsDetails()
+        fun showSingleTvShowResponseDetails(tvShow: TvShow)
         fun setSubscribeBtnUnClicked()
         fun setSubscribeBtnClicked()
         fun isSubscribeBtnEnabled(boolean: Boolean)
@@ -10,6 +15,6 @@ interface TvShowContract {
     }
 
     interface Presenter {
-
+        fun fetchSingleTvShowData(context: Context, tvShowId: Int, deviceLanguage: String)
     }
 }

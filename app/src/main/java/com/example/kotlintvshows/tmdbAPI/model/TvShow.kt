@@ -8,6 +8,7 @@ class TvShow(
     val backdrop_path: String?,
     val vote_average: Double,
     val overview: String,
+    val networks: List<Network>,
     val first_air_date: String,
     val genre_ids: Array<Int>,
     val name: String): Serializable

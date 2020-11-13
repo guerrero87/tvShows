@@ -6,9 +6,9 @@ import com.example.kotlintvshows.tmdbAPI.model.TvShow
 interface MainContract {
 
     interface View {
-        fun fetchSingleTvShowDetails()
+        fun fetchFavTvShowsDetails()
         fun showSingleTvShowResponseDetails(tvShow: TvShow)
-        fun onTvShowPressed(tvShow: TvShow)
+        fun onTvShowPressed(tvShowId: Int)
         fun refreshRecycler(tvShow: TvShow)
         fun showToast(message: String)
     }

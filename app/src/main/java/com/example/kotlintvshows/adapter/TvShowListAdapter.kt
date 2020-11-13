@@ -50,7 +50,7 @@ class TvShowListAdapter (private val context: Context,
             itemView.tvName.text = tvShow.name
 
             itemView.setOnClickListener{
-                tvShowListContract.onTvShowPressed(tvShow)
+                tvShowListContract.onTvShowPressed(tvShow.id)
             }
 
             itemView.setOnLongClickListener {

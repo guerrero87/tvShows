@@ -21,7 +21,6 @@ import kotlin.collections.ArrayList
 
 class MainActivity : BaseActivity<MainPresenter>(), MainContract.View {
 
-    private val deviceLocale: String = Locale.getDefault().language
     private var favTvShowsList: ArrayList<TvShow> = ArrayList()
     private lateinit var favTvShowsAdapter: MainAdapter
 
@@ -33,8 +32,7 @@ class MainActivity : BaseActivity<MainPresenter>(), MainContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        fetchSingleTvShowDetails()
-        initListeners()
+        fetchFavTvShowsDetails()
     }
 
     private fun initListeners() {
@@ -60,8 +58,10 @@ class MainActivity : BaseActivity<MainPresenter>(), MainContract.View {
         favTvShowsAdapter.notifyDataSetChanged()
     }
 
-    override fun fetchSingleTvShowDetails() {
+    override fun fetchFavTvShowsDetails() {
         val favTvShowsIdList: MutableList<Int> = createOrOpenUserDataFile(this)
+        val deviceLocale: String = Locale.getDefault().language
+
         for (tvShowId in favTvShowsIdList) {
             presenter.fetchSingleTvShowData(this, tvShowId, deviceLocale)
         }
@@ -70,11 +70,12 @@ class MainActivity : BaseActivity<MainPresenter>(), MainContract.View {
     override fun showSingleTvShowResponseDetails(tvShow: TvShow) {
         favTvShowsList.add(tvShow)
         initFavShowsRecyclerView()
+        initListeners()
     }
 
-    override fun onTvShowPressed(tvShow: TvShow) {
+    override fun onTvShowPressed(tvShowId: Int) {
         finish()
-        launchTvShowActivityMain(applicationContext, tvShow)
+        launchTvShowActivityMain(applicationContext, tvShowId)
     }
 
     override fun refreshRecycler(tvShow: TvShow) {

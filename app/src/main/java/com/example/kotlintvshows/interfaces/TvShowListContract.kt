@@ -1,7 +1,6 @@
 package com.example.kotlintvshows.interfaces
 
 import android.content.Context
-import com.example.kotlintvshows.tmdbAPI.model.TvShow
 import com.example.kotlintvshows.tmdbAPI.model.TvShowsList
 
 interface TvShowListContract {
@@ -10,7 +9,7 @@ interface TvShowListContract {
         fun fetchTvShowListDetails()
         fun showTvSHowListResponseDetails(tvshows: TvShowsList)
         fun loadNextResultsPage(tvshows: TvShowsList)
-        fun onTvShowPressed(tvShow: TvShow)
+        fun onTvShowPressed(tvShowId: Int)
         fun showToast(message: String)
     }
 

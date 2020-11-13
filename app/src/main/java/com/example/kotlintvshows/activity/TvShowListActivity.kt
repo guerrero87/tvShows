@@ -81,9 +81,9 @@ class TvShowListActivity: BaseActivity<TvShowListPresenter>(), TvShowListContrac
         tvShowListAdapter.notifyDataSetChanged()
     }
 
-    override fun onTvShowPressed(tvShow: TvShow) {
+    override fun onTvShowPressed(tvShowId: Int) {
         finish()
-        launchTvShowActivityList(applicationContext, tvShow, requestType)
+        launchTvShowActivityList(applicationContext, tvShowId, requestType)
     }
 
     override fun showToast(message: String) {
