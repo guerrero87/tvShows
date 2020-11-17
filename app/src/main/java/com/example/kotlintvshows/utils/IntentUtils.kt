@@ -22,6 +22,7 @@ fun launchTvShowActivityList(context: Context, tvShowId: Int, requestType: Strin
 
 private fun launchTvShowActivity(context: Context, tvShowId: Int, origin: String, requestType: String?) {
     val intent = Intent(context, TvShowActivity::class.java)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     intent.putExtra(TV_SHOW_ID, tvShowId)
     intent.putExtra(ORIGIN, origin)
     intent.putExtra(REQUEST_TYPE, requestType)
@@ -30,12 +31,14 @@ private fun launchTvShowActivity(context: Context, tvShowId: Int, origin: String
 
 fun launchTvShowsListActivity(context: Context, requestType: String?) {
     val intent = Intent(context, TvShowListActivity::class.java)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     intent.putExtra(REQUEST_TYPE, requestType)
     startActivity(context, intent, null)
 }
 
 fun launchMainActivity(context: Context) {
     val intent = Intent(context, MainActivity::class.java)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     startActivity(context, intent, null)
 }
 

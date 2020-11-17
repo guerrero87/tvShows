@@ -33,6 +33,7 @@ class MainActivity : BaseActivity<MainPresenter>(), MainContract.View {
         setContentView(R.layout.activity_main)
 
         fetchFavTvShowsDetails()
+        initListeners()
     }
 
     private fun initListeners() {
@@ -70,7 +71,6 @@ class MainActivity : BaseActivity<MainPresenter>(), MainContract.View {
     override fun showSingleTvShowResponseDetails(tvShow: TvShow) {
         favTvShowsList.add(tvShow)
         initFavShowsRecyclerView()
-        initListeners()
     }
 
     override fun onTvShowPressed(tvShowId: Int) {

@@ -8,7 +8,7 @@ class Constants {
         ATTENTION: REPLACE API_KEY WITH YOUR OWN PERSONAL API KEY VALUE
          **/
         const val TMDB_API_KEY = BuildConfig.TMDB_API_KEY
-        const val FILE_NAME = "favTvShows1.json"
+        const val FILE_NAME = "userFavTvShows.json"
         const val TMDB_URL = "https://api.themoviedb.org/3/"
         const val GRID_LAYOUT_COLUMN_NUMBER = 3
         //TAGS
