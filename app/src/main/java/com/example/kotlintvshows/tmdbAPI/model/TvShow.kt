@@ -2,7 +2,7 @@ package com.example.kotlintvshows.tmdbAPI.model
 
 import java.io.Serializable
 
-class TvShow(
+class TvShow( //agregar data
     val poster_path: String?,
     val id: Int,
     val backdrop_path: String?,

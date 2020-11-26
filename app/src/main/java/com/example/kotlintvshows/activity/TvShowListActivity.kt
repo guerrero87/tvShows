@@ -14,6 +14,7 @@ import com.example.kotlintvshows.tmdbAPI.manager.TmdbManager
 import com.example.kotlintvshows.tmdbAPI.model.TvShow
 import com.example.kotlintvshows.tmdbAPI.model.TvShowsList
 import com.example.kotlintvshows.utils.Constants
+import com.example.kotlintvshows.utils.Constants.Companion.GRID_LAYOUT_COLUMN_NUMBER
 import com.example.kotlintvshows.utils.Constants.Companion.REQUEST_TYPE
 import com.example.kotlintvshows.utils.detectRecyclerScrollPosition
 import com.example.kotlintvshows.utils.launchMainActivity
@@ -47,7 +48,7 @@ class TvShowListActivity: BaseActivity<TvShowListPresenter>(), TvShowListContrac
     private fun initTvShowListRecyclerView(tvShowList: ArrayList<TvShow>) {
         val gridLayoutManager = GridLayoutManager(
             this,
-            Constants.GRID_LAYOUT_COLUMN_NUMBER)
+            GRID_LAYOUT_COLUMN_NUMBER)
 
         tvShowListAdapter = TvShowListAdapter(this, tvShowList, this)
 

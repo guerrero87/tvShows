@@ -6,7 +6,7 @@ import com.example.kotlintvshows.tmdbAPI.model.TvShow
 interface MainContract {
 
     interface View {
-        fun fetchFavTvShowsDetails()
+        fun fetchFavTvShowsDetails() //pasar a privado
         fun showSingleTvShowResponseDetails(tvShow: TvShow)
         fun onTvShowPressed(tvShowId: Int)
         fun refreshRecycler(tvShow: TvShow)
