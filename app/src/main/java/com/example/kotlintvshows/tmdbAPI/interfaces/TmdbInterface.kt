@@ -10,7 +10,7 @@ import retrofit2.http.Query
 interface TmdbInterface {
 
     //TODO: SHOULD THIS VALUES BE INCLUDED IN CONSTANTS?
-    @GET("tv/popular55")
+    @GET("tv/popular")
     fun getPopularTvShows(@Query("api_key") apiKey: String,
                           @Query("language") language: String,
                           @Query("page") page: Int)
